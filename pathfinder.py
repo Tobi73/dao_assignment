@@ -1,7 +1,6 @@
 import json
 import sys
 import os
-from priorityqueue import PriorityQueue
 
 
 class PathFinder(object):
@@ -9,14 +8,14 @@ class PathFinder(object):
         self.graph = self._load_graph(path_to_graph)
 
     def find_path(self, start_node: str, finish_node: str) -> (list, int):
-        priority_queue = PriorityQueue()
-        priority_queue.put(start_node, 0)
+        node_potentials = []
+        node_potentials.insert(0, (start_node, 0))
         graph_path = {}
         nodes_cost = {}
         graph_path[start_node] = None
         nodes_cost[start_node] = 0
-        while not priority_queue.is_empty():
-            current_node = priority_queue.pop()
+        while not len(node_potentials) == 0:
+            current_node = self._get_node_with_most_potential(node_potentials)[0]
 
             if current_node == finish_node:
                 break
@@ -25,7 +24,7 @@ class PathFinder(object):
                 new_cost = nodes_cost[current_node] + weight
                 if node not in graph_path or new_cost < nodes_cost[node]:
                     nodes_cost[node] = new_cost
-                    priority_queue.put(node, new_cost)
+                    node_potentials.append((node, new_cost))
                     graph_path[node] = current_node
 
         return self._build_path(graph_path, start_node, finish_node), nodes_cost[finish_node]
@@ -34,7 +33,7 @@ class PathFinder(object):
         with open(path_to_graph, 'r') as file:
             return json.loads(file.read())
 
-    def _build_path(self, graph_path, start_node, finish_node) -> list:
+    def _build_path(self, graph_path: dict, start_node: str, finish_node: str) -> list:
         current_node = finish_node
         path = []
         while current_node != start_node:
@@ -44,12 +43,24 @@ class PathFinder(object):
         path.reverse()
         return path
 
+    def _get_node_with_most_potential(self, node_potentials: list) -> (str, int):
+        most_potential_node = node_potentials[0]
+        for node_potential in node_potentials:
+            node_potential_path = node_potential[1]
+            most_potential_node_path = most_potential_node[1]
+            if node_potential_path < most_potential_node_path:
+                most_potential_node = node_potential
+        node_potentials.remove(most_potential_node)
+        return most_potential_node
+
 
 if __name__ == '__main__':
-    if len(sys.argv) != 2:
-        raise Exception("Invalid number of arguments")
-    start_node = sys.argv[0]
-    finish_node = sys.argv[1]
+    # if len(sys.argv) != 2:
+    #     raise Exception("Invalid number of arguments")
+    # start_node = sys.argv[0]
+    # finish_node = sys.argv[1]
+    start_node = '1'
+    finish_node = '5'
     pathfinder = PathFinder('graph.json')
     path, path_cost = pathfinder.find_path(start_node, finish_node)
     print('Path - {},{} Cost - {}'.format(path, os.linesep, path_cost))
