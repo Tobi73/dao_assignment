@@ -1,4 +1,5 @@
 const fs = require('fs');
+const assert = require('assert');
 
 class PathFinder {
     constructor (pathToGraph) {
@@ -69,4 +70,19 @@ class PathfindingResult {
 }
 
 var pathFinder = new PathFinder('graph.json');
-console.log(pathFinder.findPath('1', '5'))
+var result = pathFinder.findPath('1', '5');
+assert.equal(20, result.pathCost);
+console.log(result)
+
+result = pathFinder.findPath('4', '1');
+assert.equal(20, result.pathCost);
+console.log(result);
+
+pathFinder = new PathFinder('graph2.json')
+result = pathFinder.findPath('1', '6');
+assert.equal(5, result.pathCost);
+console.log(result);
+
+result = pathFinder.findPath('1', '4');
+assert.equal(4, result.pathCost);
+console.log(result);
