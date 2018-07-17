@@ -72,17 +72,13 @@ class PathfindingResult {
 var pathFinder = new PathFinder('graph.json');
 var result = pathFinder.findPath('1', '5');
 assert.equal(20, result.pathCost);
-console.log(result)
+console.log(`Path from node 1 to node 5 - ${result.path} for graph described in graph.json. Path price - ${result.pathCost}`);
 
 result = pathFinder.findPath('4', '1');
 assert.equal(20, result.pathCost);
-console.log(result);
+console.log(`Path from node 4 to node 1 - ${result.path} for graph described in graph.json. Path price - ${result.pathCost}`);
 
 pathFinder = new PathFinder('graph2.json')
 result = pathFinder.findPath('1', '6');
 assert.equal(5, result.pathCost);
-console.log(result);
-
-result = pathFinder.findPath('1', '4');
-assert.equal(4, result.pathCost);
-console.log(result);
+console.log(`Path from node 1 to node 6 - ${result.path} for graph described in graph2.json. Path price - ${result.pathCost}`);
