@@ -1,4 +1,5 @@
 import json
+import sys
 import os
 
 
@@ -54,8 +55,12 @@ class PathFinder(object):
 
 
 if __name__ == '__main__':
-    start_node = '1'
-    finish_node = '5'
+    if len(sys.argv) < 3:
+        raise Exception("Invalid number of arguments")
+    start_node = sys.argv[1]
+    finish_node = sys.argv[2]
     pathfinder = PathFinder('graph.json')
     path, path_cost = pathfinder.find_path(start_node, finish_node)
-    print('Path - {},{} Cost - {}'.format(path, os.linesep, path_cost))
+    print('Path from node {} to node {} - {},{} Cost - {}'.format(start_node,
+                                                                finish_node, 
+                                                                path, os.linesep, path_cost))
